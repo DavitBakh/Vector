@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <initializer_list>
 #include <cassert>
+#include <stdexcept>
 
 template <typename T>
 class Vector
@@ -26,6 +27,16 @@ public:
 	void resize(size_t newSize);
 	void clear();
 	bool empty() const;
+
+	T& at(size_t index);
+	const T& at(size_t index) const;
+	T& front();
+	const T& front() const;
+	T& back();
+	const T& back() const;
+	T* data();
+	const T* data() const;
+
 
 
 	T& operator[](size_t index);
@@ -130,8 +141,6 @@ Vector<T>& Vector<T>::operator=(const Vector<T>& source)
 
 #pragma endregion
 
-
-
 #pragma region TempRegin
 
 
@@ -189,7 +198,58 @@ void Vector<T>::clear()
 
 #pragma endregion
 
+#pragma region AccessFunctions
 
+template<typename T>
+T& Vector<T>::at(size_t index)
+{
+	if (index >= _size)
+		throw std::invalid_argument("Index out of range");
 
+	return _arr[index];
+}
 
+template<typename T>
+const T& Vector<T>::at(size_t index) const
+{
+	if (index >= _size)
+		throw std::invalid_argument("Index out of range");
 
+	return _arr[index];
+}
+
+template<typename T>
+T& Vector<T>::front()
+{
+	return _arr[0];
+}
+
+template<typename T>
+const T& Vector<T>::front() const
+{
+	return _arr[0];
+}
+template<typename T>
+T& Vector<T>::back()
+{
+	return _arr[_size - 1];
+}
+
+template<typename T>
+const T& Vector<T>::back() const
+{
+	return _arr[_size - 1];
+}
+
+template<typename T>
+T* Vector<T>::data()
+{
+	return _arr;
+}
+
+template<typename T>
+const T* Vector<T>::data() const
+{
+	return _arr;
+}
+#pragma endregion
