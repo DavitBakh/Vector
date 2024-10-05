@@ -30,6 +30,7 @@ public:
 	bool empty() const;
 	void reserve(size_t newCapacity);
 	void shrink_to_fit();
+	void swap(Vector& other);
 
 	T& at(size_t index);
 	const T& at(size_t index) const;
@@ -217,6 +218,16 @@ void Vector<T>::shrink_to_fit()
 	_capacity = _size;
 }
 
+template<typename T>
+void Vector<T>::swap(Vector& other)
+{
+	T* temp = this->_arr;
+	this->_arr = other._arr;
+	other._arr = temp;
+
+	std::swap(this->_size, other._size);
+	std::swap(this->_capacity, other._capacity);
+}
 
 #pragma endregion
 
