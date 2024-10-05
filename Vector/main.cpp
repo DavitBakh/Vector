@@ -10,7 +10,7 @@
 #include "Tests/8AccessFunctionsTest.h"
 #include "Tests/9ReserveAndShrinkToFitTest.h"
 #include "Tests/10SwapTest.h"
-//#include "Tests/11SubscriptOperatorTest.h"
+#include "Tests/11SubscriptOperatorTest.h"
 //#include "Tests/12DestructorCallTest.h"
 //#include "Tests/13EmplaceBackTest.h"
 //#include "Tests/13EmplaceBackTest.h"

@@ -14,7 +14,8 @@ private:
 	T* _arr;
 
 public:
-	Vector(size_t size = 0, T defaultValue = 0);
+	Vector(size_t size = 0);
+	Vector(size_t size, const T& val);
 	Vector(std::initializer_list<T> initList);
 	Vector(const Vector& other);
 	~Vector();
@@ -55,10 +56,13 @@ public:
 #pragma region Ctors and Destructor
 
 template <typename T>
-Vector<T>::Vector(size_t size, T defaultValue) : _size(size), _capacity(size), _arr(new T[size])
+Vector<T>::Vector(size_t size) : _size(size), _capacity(size), _arr(new T[size]) { }
+
+template<typename T>
+Vector<T>::Vector(size_t size, const T& val) : Vector(size)
 {
-	for (size_t i = 0; i < _size; i++)
-		_arr[i] = defaultValue;
+	for (size_t i = 0; i < size; i++)
+		_arr[i] = val;
 }
 
 template <typename T>
