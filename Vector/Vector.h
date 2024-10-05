@@ -17,16 +17,19 @@ public:
 	Vector(size_t size = 0, T defaultValue = 0);
 	Vector(std::initializer_list<T> initList);
 	Vector(const Vector& other);
+	~Vector();
+
 
 
 	size_t size() const;
-	~Vector();
-
+	size_t capacity() const;
 	void push_back(const T& val);
 	void pop_back();
 	void resize(size_t newSize);
 	void clear();
 	bool empty() const;
+	void reserve(size_t newCapacity);
+	void shrink_to_fit();
 
 	T& at(size_t index);
 	const T& at(size_t index) const;
@@ -151,6 +154,11 @@ size_t Vector<T>::size() const
 	return _size;
 }
 
+template<typename T>
+size_t Vector<T>::capacity() const
+{
+	return _capacity;
+}
 
 template<typename T>
 void Vector<T>::push_back(const T& val)
@@ -195,6 +203,20 @@ void Vector<T>::clear()
 {
 	_size = 0;
 }
+
+template<typename T>
+void Vector<T>::reserve(size_t newCapacity)
+{
+	if (newCapacity > _capacity)
+		_capacity = newCapacity;
+}
+
+template<typename T>
+void Vector<T>::shrink_to_fit()
+{
+	_capacity = _size;
+}
+
 
 #pragma endregion
 
@@ -253,3 +275,4 @@ const T* Vector<T>::data() const
 	return _arr;
 }
 #pragma endregion
+

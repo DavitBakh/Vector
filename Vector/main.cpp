@@ -8,7 +8,7 @@
 #include "Tests/6CopyConstructorTest.h"
 #include "Tests/7AssignmentOperatorTest.h"
 #include "Tests/8AccessFunctionsTest.h"
-//#include "Tests/9ReserveAndShrinkToFitTest.h"
+#include "Tests/9ReserveAndShrinkToFitTest.h"
 //#include "Tests/10SwapTest.h"
 //#include "Tests/11SubscriptOperatorTest.h"
 //#include "Tests/12DestructorCallTest.h"
