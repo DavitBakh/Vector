@@ -2,7 +2,7 @@
 
 #include "Tests/1BasicConstructorsTest.h"
 #include "Tests/2InitializerListConstructorTest.h"
-//#include "Tests/3PushBackTest.h"
+#include "Tests/3PushBackTest.h"
 //#include "Tests/4PopBackTest.h"
 //#include "Tests/5ClearTest.h"
 //#include "Tests/6CopyConstructorTest.h"

@@ -23,6 +23,9 @@ public:
 	T& operator[](size_t index);
 	const T& operator[](size_t index) const;
 
+	void push_back(const T& val);
+	void resize(size_t newSize);
+
 
 };
 
@@ -63,4 +66,30 @@ template<typename T>
 const T& Vector<T>::operator[](size_t index) const
 {
 	return _arr[index];
+}
+
+template<typename T>
+void Vector<T>::push_back(const T& val)
+{
+	if (_size == _capacity)
+		resize(2 * _capacity + 1);
+
+	_arr[_size++] = val;
+}
+
+template<typename T>
+void Vector<T>::resize(size_t newSize)
+{
+	_capacity = newSize;
+
+	if (_size > newSize)
+		_size = newSize;
+
+	T* temp = new T[newSize];
+
+	for (size_t i = 0; i < _size; i++)
+		temp[i] = _arr[i];
+
+	delete[] _arr;
+	_arr = temp;
 }
