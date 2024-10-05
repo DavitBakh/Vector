@@ -5,6 +5,7 @@
 // Again: Declare your functions inside your class, but define them outside of it.
 #include <cstddef>
 #include <initializer_list>
+#include <cassert>
 
 template <typename T>
 class Vector
@@ -24,6 +25,7 @@ public:
 	const T& operator[](size_t index) const;
 
 	void push_back(const T& val);
+	void pop_back();
 	void resize(size_t newSize);
 
 
@@ -59,12 +61,16 @@ Vector<T>::~Vector()
 template <typename T>
 T& Vector<T>::operator[](size_t index)
 {
+	assert(index < _size);
+
 	return _arr[index];
 }
 
 template<typename T>
 const T& Vector<T>::operator[](size_t index) const
 {
+	assert(index < _size);
+
 	return _arr[index];
 }
 
@@ -75,6 +81,12 @@ void Vector<T>::push_back(const T& val)
 		resize(2 * _capacity + 1);
 
 	_arr[_size++] = val;
+}
+
+template<typename T>
+inline void Vector<T>::pop_back()
+{
+	_size--;
 }
 
 template<typename T>
