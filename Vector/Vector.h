@@ -27,6 +27,8 @@ public:
 	void push_back(const T& val);
 	void pop_back();
 	void resize(size_t newSize);
+	void clear();
+	bool empty();
 
 
 };
@@ -84,7 +86,7 @@ void Vector<T>::push_back(const T& val)
 }
 
 template<typename T>
-inline void Vector<T>::pop_back()
+void Vector<T>::pop_back()
 {
 	_size--;
 }
@@ -104,4 +106,16 @@ void Vector<T>::resize(size_t newSize)
 
 	delete[] _arr;
 	_arr = temp;
+}
+
+template<typename T>
+bool Vector<T>::empty()
+{
+	return _size == 0;
+}
+
+template<typename T>
+void Vector<T>::clear()
+{
+	_size = 0;
 }

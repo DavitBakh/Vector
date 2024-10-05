@@ -4,7 +4,7 @@
 #include "Tests/2InitializerListConstructorTest.h"
 #include "Tests/3PushBackTest.h"
 #include "Tests/4PopBackTest.h"
-//#include "Tests/5ClearTest.h"
+#include "Tests/5ClearTest.h"
 //#include "Tests/6CopyConstructorTest.h"
 //#include "Tests/7AssignmentOperatorTest.h"
 //#include "Tests/8AccessFunctionsTest.h"
