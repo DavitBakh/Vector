@@ -21,15 +21,16 @@ public:
 	size_t size() const;
 	~Vector();
 
-	T& operator[](size_t index);
-	const T& operator[](size_t index) const;
-
-
 	void push_back(const T& val);
 	void pop_back();
 	void resize(size_t newSize);
 	void clear();
-	bool empty();
+	bool empty() const;
+
+
+	T& operator[](size_t index);
+	const T& operator[](size_t index) const;
+	Vector<T>& operator=(const Vector<T>& source);
 
 	template <typename U>
 	friend bool operator==(const Vector<U>& lhs, const Vector<U>& rhs);
@@ -109,6 +110,24 @@ bool operator!=(const Vector<T>& lhs, const Vector<T>& rhs)
 	return !(lhs == rhs);
 }
 
+template<typename T>
+Vector<T>& Vector<T>::operator=(const Vector<T>& source)
+{
+	if (source != *this)
+	{
+		this->_capacity = source._capacity;
+		this->_size = source._size;
+
+		delete[] this->_arr;
+		this->_arr = new T[_size];
+
+		for (size_t i = 0; i < _size; i++)
+			this->_arr[i] = source._arr[i];
+	}
+
+	return *this;
+}
+
 #pragma endregion
 
 
@@ -157,7 +176,7 @@ void Vector<T>::resize(size_t newSize)
 }
 
 template<typename T>
-bool Vector<T>::empty()
+bool Vector<T>::empty() const
 {
 	return _size == 0;
 }
