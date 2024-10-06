@@ -14,11 +14,11 @@ private:
 	T* _arr;
 
 public:
-	Vector();
-	Vector(size_t size);
+	Vector(size_t size = 0);
 	Vector(size_t size, const T& val);
 	Vector(std::initializer_list<T> initList);
 	Vector(const Vector& other);
+	Vector(Vector&& other) noexcept;
 	~Vector();
 
 
@@ -50,8 +50,8 @@ public:
 
 	T& operator[](size_t index);
 	const T& operator[](size_t index) const;
-	Vector<T>& operator=(const Vector<T>& source);
-	Vector<T>& operator=(Vector<T>&& source) noexcept;
+	Vector& operator=(const Vector<T>& source);
+	Vector& operator=(Vector&& source) noexcept;
 
 	template <typename U>
 	friend bool operator==(const Vector<U>& lhs, const Vector<U>& rhs);
@@ -62,9 +62,6 @@ public:
 
 template <typename T>
 Vector<T>::Vector(size_t size) : _size(size), _capacity(size), _arr(reinterpret_cast<T*>(new char[size * sizeof(T)] {})) { }
-
-template <typename T>
-Vector<T>::Vector() : Vector(0) {};
 
 template<typename T>
 Vector<T>::Vector(size_t size, const T& val) : Vector(size)
@@ -81,12 +78,19 @@ Vector<T>::Vector(std::initializer_list<T> initList) : _size(initList.size()), _
 }
 
 template<typename T>
-Vector<T>::Vector(const Vector& other) : _size(other._size), _capacity(other._capacity), _arr(reinterpret_cast<T*>(new char[_capacity * sizeof(T)]))
+Vector<T>::Vector(const Vector& source) : _size(source._size), _capacity(source._capacity), _arr(reinterpret_cast<T*>(new char[_capacity * sizeof(T)]))
 {
 	for (size_t i = 0; i < _size; i++)
-		_arr[i] = other._arr[i];
+		_arr[i] = source._arr[i];
 }
 
+template<typename T>
+Vector<T>::Vector(Vector&& source) noexcept : _size(source._size), _capacity(source._capacity), _arr(source._arr)
+{
+	source._arr = nullptr;
+	source._size = 0;
+	source._capacity = 0;
+}
 
 template <typename T>
 Vector<T>::~Vector()
@@ -120,10 +124,10 @@ const T& Vector<T>::operator[](size_t index) const
 template<typename T>
 bool operator==(const Vector<T>& lhs, const Vector<T>& rhs)
 {
-	if (lhs.size() != rhs.size())
+	if (lhs._size != rhs._size)
 		return false;
 
-	for (size_t i = 0; i < lhs.size(); i++)
+	for (size_t i = 0; i < lhs._size; i++)
 		if (lhs._arr[i] != rhs._arr[i])
 			return false;
 
@@ -139,7 +143,7 @@ bool operator!=(const Vector<T>& lhs, const Vector<T>& rhs)
 template<typename T>
 Vector<T>& Vector<T>::operator=(const Vector<T>& source)
 {
-	if (source != *this)
+	if (&source != this)
 	{
 		this->~Vector();
 
@@ -158,7 +162,7 @@ Vector<T>& Vector<T>::operator=(const Vector<T>& source)
 template<typename T>
 Vector<T>& Vector<T>::operator=(Vector<T>&& source) noexcept
 {
-	if (source != *this)
+	if (&source != this)
 	{
 		this->~Vector();
 

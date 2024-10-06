@@ -1,5 +1,3 @@
-
-
 #include "Tests/1BasicConstructorsTest.h"
 #include "Tests/2InitializerListConstructorTest.h"
 #include "Tests/3PushBackTest.h"
@@ -15,7 +13,7 @@
 #include "Tests/13EmplaceBackTest.h"
 #include "Tests/14ClassWithoutDefaultConstructorTest.h"
 #include "Tests/15ClassWithoutCopyConstructorTest.h"
-//#include "Tests/16MoveConstructorAndMoveAssignmentOperatorTest.h"
+#include "Tests/16MoveConstructorAndMoveAssignmentOperatorTest.h"
 
 #include <iostream>
 
