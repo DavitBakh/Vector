@@ -21,8 +21,6 @@ public:
 	Vector(Vector&& other) noexcept;
 	~Vector();
 
-
-
 	size_t size() const;
 	size_t capacity() const;
 	void push_back(const T& val);
@@ -45,8 +43,6 @@ public:
 	const T& back() const;
 	T* data();
 	const T* data() const;
-
-
 
 	T& operator[](size_t index);
 	const T& operator[](size_t index) const;
@@ -181,9 +177,6 @@ Vector<T>& Vector<T>::operator=(Vector<T>&& source) noexcept
 
 #pragma endregion
 
-#pragma region TempRegin
-
-
 
 template <typename T>
 size_t Vector<T>::size() const
@@ -264,7 +257,8 @@ void Vector<T>::reserve(size_t newCapacity)
 template<typename T>
 void Vector<T>::shrink_to_fit()
 {
-	_capacity = _size;
+	if (_size < _capacity)
+		resize(_size);
 }
 
 template<typename T>
@@ -278,7 +272,6 @@ void Vector<T>::swap(Vector& other)
 	std::swap(this->_capacity, other._capacity);
 }
 
-#pragma endregion
 
 #pragma region AccessFunctions
 
