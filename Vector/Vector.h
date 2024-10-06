@@ -14,7 +14,8 @@ private:
 	T* _arr;
 
 public:
-	Vector(size_t size = 0);
+	Vector();
+	Vector(size_t size);
 	Vector(size_t size, const T& val);
 	Vector(std::initializer_list<T> initList);
 	Vector(const Vector& other);
@@ -50,6 +51,7 @@ public:
 	T& operator[](size_t index);
 	const T& operator[](size_t index) const;
 	Vector<T>& operator=(const Vector<T>& source);
+	Vector<T>& operator=(Vector<T>&& source) noexcept;
 
 	template <typename U>
 	friend bool operator==(const Vector<U>& lhs, const Vector<U>& rhs);
@@ -60,6 +62,9 @@ public:
 
 template <typename T>
 Vector<T>::Vector(size_t size) : _size(size), _capacity(size), _arr(reinterpret_cast<T*>(new char[size * sizeof(T)] {})) { }
+
+template <typename T>
+Vector<T>::Vector() : Vector(0) {};
 
 template<typename T>
 Vector<T>::Vector(size_t size, const T& val) : Vector(size)
@@ -81,6 +86,7 @@ Vector<T>::Vector(const Vector& other) : _size(other._size), _capacity(other._ca
 	for (size_t i = 0; i < _size; i++)
 		_arr[i] = other._arr[i];
 }
+
 
 template <typename T>
 Vector<T>::~Vector()
@@ -149,6 +155,26 @@ Vector<T>& Vector<T>::operator=(const Vector<T>& source)
 	return *this;
 }
 
+template<typename T>
+Vector<T>& Vector<T>::operator=(Vector<T>&& source) noexcept
+{
+	if (source != *this)
+	{
+		this->~Vector();
+
+		this->_capacity = source._capacity;
+		this->_size = source._size;
+		this->_arr = source._arr;
+
+
+		source._arr = nullptr;
+		source._size = 0;
+		source._capacity = 0;
+	}
+
+	return *this;
+}
+
 #pragma endregion
 
 #pragma region TempRegin
@@ -201,7 +227,7 @@ void Vector<T>::resize(size_t newSize)
 
 	for (size_t i = 0; i < _size; i++)
 	{
-		temp[i] = _arr[i];
+		new(temp + i) T(std::move(_arr[i]));
 		_arr[i].~T();
 	}
 
@@ -228,7 +254,7 @@ template<typename T>
 void Vector<T>::reserve(size_t newCapacity)
 {
 	if (newCapacity > _capacity)
-		_capacity = newCapacity;
+		resize(newCapacity);
 }
 
 template<typename T>
@@ -310,5 +336,8 @@ template<typename T>
 template<typename ...Args>
 void Vector<T>::emplace_back(Args && ...args)
 {
-	push_back(T(std::forward<Args>(args)...));
+	if (_size == _capacity)
+		resize(2 * _capacity + 1);
+
+	new(_arr + _size++) T(std::forward<Args>(args)...);
 }
