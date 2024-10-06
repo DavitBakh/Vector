@@ -59,7 +59,7 @@ public:
 #pragma region Ctors and Destructor
 
 template <typename T>
-Vector<T>::Vector(size_t size) : _size(size), _capacity(size), _arr(new T[size]) { }
+Vector<T>::Vector(size_t size) : _size(size), _capacity(size), _arr(reinterpret_cast<T*>(new char[size * sizeof(T)] {})) { }
 
 template<typename T>
 Vector<T>::Vector(size_t size, const T& val) : Vector(size)
@@ -71,26 +71,24 @@ Vector<T>::Vector(size_t size, const T& val) : Vector(size)
 template <typename T>
 Vector<T>::Vector(std::initializer_list<T> initList) : _size(initList.size()), _capacity(initList.size()), _arr(new T[initList.size()])
 {
-
 	for (auto iter = initList.begin(); iter != initList.end(); ++iter)
 		_arr[iter - initList.begin()] = *iter;
 }
 
 template<typename T>
-Vector<T>::Vector(const Vector& other)
+Vector<T>::Vector(const Vector& other) : _size(other._size), _capacity(other._capacity), _arr(reinterpret_cast<T*>(new char[_capacity * sizeof(T)]))
 {
-	this->_size = other._size;
-	this->_capacity = other._capacity;
-
-	this->_arr = new T[_size];
 	for (size_t i = 0; i < _size; i++)
-		this->_arr[i] = other._arr[i];
+		_arr[i] = other._arr[i];
 }
 
 template <typename T>
 Vector<T>::~Vector()
 {
-	delete[] _arr;
+	for (int i = 0; i < _size; i++)
+		_arr[i].~T();
+
+	delete[] reinterpret_cast<char*>(_arr);
 }
 
 #pragma endregion
@@ -137,12 +135,13 @@ Vector<T>& Vector<T>::operator=(const Vector<T>& source)
 {
 	if (source != *this)
 	{
+		this->~Vector();
+
 		this->_capacity = source._capacity;
 		this->_size = source._size;
 
-		delete[] this->_arr;
-		this->_arr = new T[_size];
 
+		this->_arr = reinterpret_cast<T*>(new char[_capacity * sizeof(T)] {});
 		for (size_t i = 0; i < _size; i++)
 			this->_arr[i] = source._arr[i];
 	}
@@ -180,23 +179,33 @@ void Vector<T>::push_back(const T& val)
 template<typename T>
 void Vector<T>::pop_back()
 {
-	_size--;
+	_arr[--_size].~T();
 }
 
 template<typename T>
 void Vector<T>::resize(size_t newSize)
 {
+	T* temp = reinterpret_cast<T*>(new char[newSize * sizeof(T)] {});
+
+	//hnaravora aveli chisht kliner this->~Vector() kanchel, 
+	//vorpisi kodi krknutyun chlini ev logikan mi texum kentronacac lini SOLID-i hamadzayn, bayc senc aveli arag klini
+	//kareli e qnnutyan jamanak qnnarkel
+	if (_size > newSize)
+	{
+		for (size_t i = newSize; i < _size; i++)
+			_arr[i].~T();
+
+		_size = newSize;
+	}
 	_capacity = newSize;
 
-	if (_size > newSize)
-		_size = newSize;
-
-	T* temp = new T[newSize];
-
 	for (size_t i = 0; i < _size; i++)
+	{
 		temp[i] = _arr[i];
+		_arr[i].~T();
+	}
 
-	delete[] _arr;
+	delete[] reinterpret_cast<char*>(_arr);
 	_arr = temp;
 }
 
@@ -209,6 +218,9 @@ bool Vector<T>::empty() const
 template<typename T>
 void Vector<T>::clear()
 {
+	for (size_t i = 0; i < _size; i++)
+		_arr[i].~T();
+
 	_size = 0;
 }
 
