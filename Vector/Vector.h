@@ -33,6 +33,9 @@ public:
 	void shrink_to_fit();
 	void swap(Vector& other);
 
+	template <typename... Args>
+	void emplace_back(Args&&... args);
+
 	T& at(size_t index);
 	const T& at(size_t index) const;
 	T& front();
@@ -291,3 +294,9 @@ const T* Vector<T>::data() const
 }
 #pragma endregion
 
+template<typename T>
+template<typename ...Args>
+void Vector<T>::emplace_back(Args && ...args)
+{
+	push_back(T(std::forward<Args>(args)...));
+}
